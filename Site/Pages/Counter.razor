@@ -1,16 +1,23 @@
 @page "/counter"
-
-<h1>Counter</h1>
-
-<p>Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<h1>Counter Dynamic</h1>
+@foreach (var index in _values)
+{
+    <button data-id=@index @onclick="() => OnClick(index)">Click</button>
+}
 
 @code {
-    private int currentCount = 0;
 
-    private void IncrementCount()
+    private int[] _values = new int[0];
+
+    protected override async Task OnInitializedAsync()
     {
-        currentCount++;
+        await Task.Delay(1);
+        _values = new[] { 1 };
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnClick(int index)
+    {
+        _values = Enumerable.Range(1, index + 1).ToArray();
     }
 }
